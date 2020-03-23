@@ -46,6 +46,19 @@ func (q *Query) FindCountryByAlpha(code string) (result Country, err error) {
 	}
 }
 
+// FindCountryByCountryCode finds a country by a given country code
+func (q *Query) FindCountryByCountryCode(code string) (result Country, err error) {
+	for _, country := range q.Countries {
+		for _, cc := range country.Codes.CallingCodes {
+			if cc == code {
+				return country, nil
+			}
+		}
+	}
+
+	return Country{}, makeError("Could not find country with code", code)
+}
+
 // FindAllCountries returns a list of all countries
 func (q *Query) FindAllCountries() (countries map[string]Country) {
 	return q.Countries
